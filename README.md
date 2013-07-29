@@ -69,14 +69,14 @@ There are three sections in this code
 2. The `event list`
 3. The `state definitions`
 
-## `context` vs. `state`
+### `context` vs. `state`
 
 In an Erlang server, state is passed between callbacks. However, it gets confusing talking 
 about this server state when we also have the concept of state machine states. So, in this
 module, we use the convention that the server state is called the `context`.
 
 
-## The `use` stanza
+### The `use` stanza
 
 As well as including the FsmDsl behaviour in your module, the `use` call lets you set various options:
 
@@ -85,7 +85,6 @@ As well as including the FsmDsl behaviour in your module, the `use` call lets yo
 | register      | {:local, :fsm } | The first argument to `start_link`, used to register a name for this module |
 | initial_state | :state          | The name of the initial state of the FSM   |
 | context       | []              | The initial context |
-| ------------- | --------------- | --------------------|
 
 
 ### The Event List
@@ -119,7 +118,7 @@ end
 
 You're free to write these functions by hand, too.
 
-## The States
+### The States
 
 We represent each state using `in_state(«name»)`. Within the block, separate clauses
 match each incoming event (with optional parameters). The code corresponding with the match
