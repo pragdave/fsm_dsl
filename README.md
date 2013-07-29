@@ -2,6 +2,7 @@
 
 A DSL wrapper for Elixir's GenFSM.Behaviour. For example:
 
+    ~~~ elixir
     defmodule Listen.NewFSM do
 
     use Daves.Fsm,  register: {:local, :listen_fsm},
@@ -59,8 +60,8 @@ A DSL wrapper for Elixir's GenFSM.Behaviour. For example:
         IO.puts("    (suspicious_segments: #{suspicious_segments})")
       end
     end
-
   end
+  ~~~
 
 There are three sections in this code
 
@@ -79,12 +80,13 @@ module, we use the convention that the server state is called the `context`.
 
 As well as including the FsmDsl behaviour in your module, the `use` call lets you set various options:
 
-| Option        | Default         | Meaning
--------------------------------------------
+| Option        | Default         | Meaning             |
+| ------------- | --------------- | --------------------|
 | register      | {:local, :fsm } | The first argument to `start_link`, used to register a name for this module |
 | initial_state | :state          | The name of the initial state of the FSM   |
 | context       | []              | The initial context |
--------------------------------------------
+| ------------- | --------------- | --------------------|
+
 
 ### The Event List
 
@@ -93,14 +95,17 @@ to cause the appropriate callback to be invoked.
 
 This code is pretty boilerplate, so we abstract it into an `events` stanza:
 
+    ~~~ elixir
     events do
       call_initiated(from, to)
       suspicious_phrase_heard
       hang_up
     end
+    ~~~
 
 This block simply creates the following functions:
 
+    ~~~ elixir
     def call_initiated(from, to) do
       :gen_fsm.send_event(«servername», :call_initiated, from, to)
     end
@@ -110,6 +115,7 @@ This block simply creates the following functions:
     def hang_up do
       :gen_fsm.send_event(«servername», hang_up)
     end
+    ~~~
 
 You're free to write these functions by hand, too.
 
@@ -119,6 +125,7 @@ We represent each state using `in_state(«name»)`. Within the block, separate c
 match each incoming event (with optional parameters). The code corresponding with the match
 will end with a call to `next_state`, which takes the new state name, the new context, and an optional timeout (in mS).
 
+    ~~~ elixir
     in_state(:listening) do
       { :hang_up } ->
         debug("Hangup", context)
@@ -128,8 +135,9 @@ will end with a call to `next_state`, which takes the new state name, the new co
         debug("Heard something suspicious", context)
         next_state(:transcribing, context.update_suspicious_segments(&1+1), @timeout)
     end
+    ~~~
 
-Do, if we're in state `listening` and we get a `hang_up` event,  we call `debug` to print a message, 
+So, if we're in state `listening` and we get a `hang_up` event,  we call `debug` to print a message, 
 and then transition to the state state, with no context. If instead we get a `suspicious_phrase_heard` 
 event, we transition to the `transcribing` state. We pass an updated context where we increment the
 number of suspicious segments, and we set a timeout.
