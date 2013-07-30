@@ -144,6 +144,15 @@ number of suspicious segments, and we set a timeout.
 If a timeout fires, it generates a `timeout` event in the next state (there's an example in the `transcribing` 
 state of the sample app)
 
+## Add to your Project
+
+Add the following to your list of dependencies in `mix.exs`:
+
+~~~ elixir
+{ :fsm_dsl, github: "pragdave/fsl_dsl" }
+~~~
+
+
 ## Author
 
 Dave Thomas, The Pragmatic Programmers. dave@pragprog.com. @/+pragdave

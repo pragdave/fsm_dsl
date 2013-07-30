@@ -5,7 +5,7 @@ defmodule FsmDsl.Mixfile do
     [ app:     :fsm_dsl,
       version: "0.0.1",
       elixir:  "~> 0.10.1-dev",
-      deps:    deps
+      deps:    deps(Mix.env)
     ]
   end
 
@@ -13,9 +13,7 @@ defmodule FsmDsl.Mixfile do
     []
   end
 
-  defp deps do
-    [ 
-       {:meck,  github: "eproxus/meck" }
-    ]
-  end
+  defp deps(:prod), do: [ ]
+  defp deps(_),     do: [ {:meck,  github: "eproxus/meck" } ]
+
 end
